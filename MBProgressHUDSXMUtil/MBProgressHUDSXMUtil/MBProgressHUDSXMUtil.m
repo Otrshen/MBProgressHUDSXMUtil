@@ -13,8 +13,10 @@ static float KDelay = 1.2f;
 static NSString *KSuccessImageName = @"hudsxm_success.png";
 static NSString *KErrorImageName = @"hudsxm_error.png";
 
+#define KSXMFont [UIFont systemFontOfSize:14]
+
 @interface MBProgressHUDSXMUtil ()
-@property (nonatomic, strong) UIView *hudView;
+@property (strong) UIView *hudView;
 @end
 
 @implementation MBProgressHUDSXMUtil
@@ -28,19 +30,20 @@ static NSString *KErrorImageName = @"hudsxm_error.png";
 
 - (void)sxm_loadingWithText:(NSString *)text view:(UIView *)view
 {
-//    [MBProgressHUD hideAllHUDsForView:self.hudView animated:NO];
-    [MBProgressHUD hideHUDForView:self.hudView animated:NO];
-    if (view == nil) {
-        view = [[UIApplication sharedApplication] windows].lastObject;
-    }
+    [MBProgressHUD hideHUDForView:self.hudView animated:YES];
+    if (view == nil) { view = [UIApplication sharedApplication].keyWindow; }
     self.hudView = view;
     
-    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:view];
+    MBProgressHUD *hud = [self sxm_createHUDWithView:view];
     hud.labelText = text;
-    hud.removeFromSuperViewOnHide = YES;
     
     [view addSubview:hud];
     [hud show:YES];
+}
+
+- (void)sxm_loadingFinish
+{
+    [MBProgressHUD hideHUDForView:self.hudView animated:YES];
 }
 
 #pragma mark - 提示文字信息
@@ -57,20 +60,15 @@ static NSString *KErrorImageName = @"hudsxm_error.png";
 
 - (void)sxm_showWithText:(NSString *)text detail:(NSString *)detail view:(UIView *)view
 {
-//    [MBProgressHUD hideAllHUDsForView:self.hudView animated:NO];
-    [MBProgressHUD hideHUDForView:self.hudView animated:NO];
-    if (view == nil) {
-        view = [[UIApplication sharedApplication] windows].lastObject;
-    }
+    [MBProgressHUD hideHUDForView:self.hudView animated:YES];
+    if (view == nil) { view = [UIApplication sharedApplication].keyWindow; }
     self.hudView = view;
     
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
+    MBProgressHUD *hud = [self sxm_createHUDWithView:view];
     hud.labelText = text;
     hud.detailsLabelText = detail;
     hud.mode = MBProgressHUDModeText;
-    //    hud.margin = 10.0f;
-    hud.removeFromSuperViewOnHide = YES;
-    [hud hide:YES afterDelay:KDelay];
+    [hud hide:YES afterDelay:self.sxmDealyTime];
 }
 
 #pragma mark - 提示文字加图片信息
@@ -82,16 +80,14 @@ static NSString *KErrorImageName = @"hudsxm_error.png";
 
 - (void)sxm_showWithText:(NSString *)text type:(SXMHUDMsgType)type view:(UIView *)view
 {
-//    [MBProgressHUD hideAllHUDsForView:self.hudView animated:NO];
-    [MBProgressHUD hideHUDForView:self.hudView animated:NO];
-    if (view == nil) {
-        view = [[UIApplication sharedApplication] windows].lastObject;
-    }
+    [MBProgressHUD hideHUDForView:self.hudView animated:YES];
+    if (view == nil) { view = [UIApplication sharedApplication].keyWindow; }
     self.hudView = view;
     
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
+    MBProgressHUD *hud = [self sxm_createHUDWithView:view];
     hud.labelText = text;
     hud.mode = MBProgressHUDModeCustomView;
+
     NSString *imageName = nil;
     if (type == SXMHUDMsgTypeSuccess) {
         imageName = KSuccessImageName;
@@ -99,8 +95,38 @@ static NSString *KErrorImageName = @"hudsxm_error.png";
         imageName = KErrorImageName;
     }
     hud.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[NSString stringWithFormat:@"MBProgressHUDSXMUtil.bundle/%@", imageName]]];
-    hud.removeFromSuperViewOnHide = YES;
-    [hud hide:YES afterDelay:KDelay];
+    [hud hide:YES afterDelay:self.sxmDealyTime];
+}
+
+#pragma mark -
+
+- (MBProgressHUD *)sxm_createHUDWithView:(UIView *)view
+{
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
+    hud.margin = self.sxmMargin;
+    hud.labelFont = self.sxmFont;
+    hud.opacity = self.sxmOpacity;
+    return hud;
+}
+
+- (float)sxmOpacity
+{
+    return _sxmOpacity = _sxmOpacity != 0 ? _sxmOpacity : 0.7f;
+}
+
+- (UIFont *)sxmFont
+{
+    return _sxmFont = _sxmFont != nil ? _sxmFont : KSXMFont;
+}
+
+- (float)sxmMargin
+{
+    return _sxmMargin = _sxmMargin != 0 ? _sxmMargin : 15.0f;
+}
+
+- (float)sxmDealyTime
+{
+    return _sxmDealyTime = _sxmDealyTime != 0 ? _sxmDealyTime : KDelay;
 }
 
 #pragma mark - 单例
