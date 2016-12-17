@@ -60,7 +60,7 @@ typedef  NS_ENUM(NSInteger, SXMHUDMsgType) {
  */
 - (void)sxm_showWithText:(NSString *)text type:(SXMHUDMsgType)type;
 /**
- *  显示文字加图片
+ *  显示文字加图片 
  */
 - (void)sxm_showWithText:(NSString *)text type:(SXMHUDMsgType)type view:(UIView *)view;
 
