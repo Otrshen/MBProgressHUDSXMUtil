@@ -16,7 +16,10 @@ static NSString *KErrorImageName = @"hudsxm_error.png";
 #define KSXMFont [UIFont systemFontOfSize:14]
 
 @interface MBProgressHUDSXMUtil ()
-@property (strong) UIView *hudView;
+/** HUD所在View */
+@property (strong) UIView *hudForView;
+/** 记录上一次HUD是不是加载框 */
+@property (assign, getter=isLoadingHud) BOOL loadingHud;
 @end
 
 @implementation MBProgressHUDSXMUtil
@@ -30,9 +33,12 @@ static NSString *KErrorImageName = @"hudsxm_error.png";
 
 - (void)sxm_loadingWithText:(NSString *)text view:(UIView *)view
 {
-    [MBProgressHUD hideHUDForView:self.hudView animated:YES];
+    [MBProgressHUD hideHUDForView:self.hudForView animated:YES];
     if (view == nil) { view = [UIApplication sharedApplication].keyWindow; }
-    self.hudView = view;
+    
+    
+    self.hudForView = view;
+    self.loadingHud = YES;
     
     MBProgressHUD *hud = [self sxm_createHUDWithView:view];
     hud.labelText = text;
@@ -43,7 +49,10 @@ static NSString *KErrorImageName = @"hudsxm_error.png";
 
 - (void)sxm_loadingFinish
 {
-    [MBProgressHUD hideHUDForView:self.hudView animated:YES];
+    // 如上次是加载框直接隐藏，如不是说明正在显示文字信息则不隐藏
+    if (self.isLoadingHud) {
+        [MBProgressHUD hideHUDForView:self.hudForView animated:YES];
+    }
 }
 
 #pragma mark - 提示文字信息
@@ -60,9 +69,11 @@ static NSString *KErrorImageName = @"hudsxm_error.png";
 
 - (void)sxm_showWithText:(NSString *)text detail:(NSString *)detail view:(UIView *)view
 {
-    [MBProgressHUD hideHUDForView:self.hudView animated:YES];
+    [MBProgressHUD hideHUDForView:self.hudForView animated:YES];
     if (view == nil) { view = [UIApplication sharedApplication].keyWindow; }
-    self.hudView = view;
+    
+    self.hudForView = view;
+    self.loadingHud = NO;
     
     MBProgressHUD *hud = [self sxm_createHUDWithView:view];
     hud.labelText = text;
@@ -80,14 +91,16 @@ static NSString *KErrorImageName = @"hudsxm_error.png";
 
 - (void)sxm_showWithText:(NSString *)text type:(SXMHUDMsgType)type view:(UIView *)view
 {
-    [MBProgressHUD hideHUDForView:self.hudView animated:YES];
+    [MBProgressHUD hideHUDForView:self.hudForView animated:YES];
     if (view == nil) { view = [UIApplication sharedApplication].keyWindow; }
-    self.hudView = view;
+    
+    self.hudForView = view;
+    self.loadingHud = NO;
     
     MBProgressHUD *hud = [self sxm_createHUDWithView:view];
     hud.labelText = text;
     hud.mode = MBProgressHUDModeCustomView;
-
+    
     NSString *imageName = nil;
     if (type == SXMHUDMsgTypeSuccess) {
         imageName = KSuccessImageName;
