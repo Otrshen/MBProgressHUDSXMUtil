@@ -2,7 +2,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "MBProgressHUDSXMUtil"
-  s.version      = "0.0.2"
+  s.version      = "0.0.3"
   s.summary      = "每次显示提示框时隐藏之前正在显示的提示框."
   s.homepage     = "https://github.com/LarkNan/MBProgressHUDSXMUtil"
   s.license      = { :type => "MIT", :file => "LICENSE" }
