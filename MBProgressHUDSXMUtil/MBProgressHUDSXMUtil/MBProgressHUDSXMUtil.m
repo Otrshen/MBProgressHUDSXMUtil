@@ -111,6 +111,29 @@ static NSString *KErrorImageName = @"hudsxm_error.png";
     [hud hide:YES afterDelay:self.sxmDealyTime];
 }
 
+- (void)sxm_showWithText:(NSString *)text detail:(NSString *)detail type:(SXMHUDMsgType)type view:(UIView *)view
+{
+    [MBProgressHUD hideHUDForView:self.hudForView animated:YES];
+    if (view == nil) { view = [UIApplication sharedApplication].keyWindow; }
+    
+    self.hudForView = view;
+    self.loadingHud = NO;
+    
+    MBProgressHUD *hud = [self sxm_createHUDWithView:view];
+    hud.labelText = text;
+    hud.detailsLabelText = detail;
+    hud.mode = MBProgressHUDModeCustomView;
+    
+    NSString *imageName = nil;
+    if (type == SXMHUDMsgTypeSuccess) {
+        imageName = KSuccessImageName;
+    } else {
+        imageName = KErrorImageName;
+    }
+    hud.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[NSString stringWithFormat:@"MBProgressHUDSXMUtil.bundle/%@", imageName]]];
+    [hud hide:YES afterDelay:self.sxmDealyTime];
+}
+
 #pragma mark -
 
 - (MBProgressHUD *)sxm_createHUDWithView:(UIView *)view
@@ -118,6 +141,7 @@ static NSString *KErrorImageName = @"hudsxm_error.png";
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
     hud.margin = self.sxmMargin;
     hud.labelFont = self.sxmFont;
+    hud.detailsLabelFont = self.sxmFont;
     hud.opacity = self.sxmOpacity;
     return hud;
 }

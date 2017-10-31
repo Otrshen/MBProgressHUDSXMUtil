@@ -25,6 +25,10 @@
     [self performSelector:@selector(showText) withObject:nil afterDelay:3.2f];
 }
 
+- (IBAction)test1:(id)sender {
+    [[MBProgressHUDSXMUtil sharedInstance] sxm_showWithText:@"错误标题" detail:@"详细错误详细错误详细错误详细错误详细错误详细错误详细错误详细错误详细错误详细错误详细错误详细错误详细错误详细错误详细错误" type:SXMHUDMsgTypeError view:self.view];
+}
+
 - (void)showText
 {
     [[MBProgressHUDSXMUtil sharedInstance] sxm_showWithText:@"加载完成" view:self.view];
@@ -34,6 +38,12 @@
 - (void)showTextWithImage
 {
     [[MBProgressHUDSXMUtil sharedInstance] sxm_showWithText:@"操作成功" type:SXMHUDMsgTypeSuccess];
+    [self performSelector:@selector(showTextAndDetailWithImage) withObject:nil afterDelay:1.2f];
+}
+
+- (void)showTextAndDetailWithImage
+{
+    [[MBProgressHUDSXMUtil sharedInstance] sxm_showWithText:@"标题" detail:@"详细错误" type:SXMHUDMsgTypeError view:self.view];
 }
 
 @end

@@ -29,6 +29,8 @@ typedef  NS_ENUM(NSInteger, SXMHUDMsgType) {
 
 + (instancetype)sharedInstance;
 
+/** ------------------- 加载显示 ---------------------- */
+
 /**
  *  加载框
  */
@@ -41,6 +43,8 @@ typedef  NS_ENUM(NSInteger, SXMHUDMsgType) {
  *  加载完成
  */
 - (void)sxm_loadingFinish;
+
+/** ------------------- 文字显示 ---------------------- */
 
 /**
  *  单文字显示 默认显示在Window层
@@ -55,6 +59,8 @@ typedef  NS_ENUM(NSInteger, SXMHUDMsgType) {
  */
 - (void)sxm_showWithText:(NSString *)text detail:(NSString *)detail view:(UIView *)view;
 
+/** ------------------- 文字+图片 显示 ---------------------- */
+
 /**
  *  显示文字加图片 默认显示在Window层
  */
@@ -63,5 +69,15 @@ typedef  NS_ENUM(NSInteger, SXMHUDMsgType) {
  *  显示文字加图片
  */
 - (void)sxm_showWithText:(NSString *)text type:(SXMHUDMsgType)type view:(UIView *)view;
+
+/**
+ 标题 + 详细描述 + 图片
+
+ @param text 标题
+ @param detail 详细描述
+ @param type 描述类型
+ @param view 在哪个View上显示
+ */
+- (void)sxm_showWithText:(NSString *)text detail:(NSString *)detail type:(SXMHUDMsgType)type view:(UIView *)view;
 
 @end
